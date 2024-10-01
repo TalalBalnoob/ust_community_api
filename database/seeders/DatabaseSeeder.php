@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Post;
 use App\Models\Staff;
 use App\Models\Student;
 use App\Models\User;
@@ -24,5 +25,7 @@ class DatabaseSeeder extends Seeder {
 
 		Student::factory(100)->create();
 		Staff::factory(4)->create();
+
+		Post::factory(250)->create();
 	}
 }
