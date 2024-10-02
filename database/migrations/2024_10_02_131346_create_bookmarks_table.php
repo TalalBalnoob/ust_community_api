@@ -11,10 +11,10 @@ return new class extends Migration {
 	 * Run the migrations.
 	 */
 	public function up(): void {
-		Schema::create('likes', function (Blueprint $table) {
+		Schema::create('bookmarks', function (Blueprint $table) {
 			$table->id();
-			$table->foreignIdFor(User::class);
-			$table->foreignId('post_id')->references('id')->on('posts')->cascadeOnDelete();
+			$table->foreignId('users')->references('id')->on('users')->cascadeOnDelete();
+			$table->foreignId('posts')->references('id')->on('posts');
 			$table->timestamps();
 		});
 	}
@@ -23,6 +23,6 @@ return new class extends Migration {
 	 * Reverse the migrations.
 	 */
 	public function down(): void {
-		Schema::dropIfExists('likes');
+		Schema::dropIfExists('bookmarks');
 	}
 };

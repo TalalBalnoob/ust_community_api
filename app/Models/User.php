@@ -58,6 +58,15 @@ class User extends Authenticatable {
 		return $this->hasMany(Like::class);
 	}
 
+	public function comments(): HasMany {
+		return $this->hasMany(Comment::class);
+	}
+
+
+	public function bookmarks(): HasMany {
+		return $this->hasMany(Bookmark::class);
+	}
+
 	public function student(): BelongsTo {
 		return $this->belongsTo(Student::class);
 	}
