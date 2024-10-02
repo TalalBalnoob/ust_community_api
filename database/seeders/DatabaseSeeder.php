@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Comment;
 use App\Models\Follower;
 use App\Models\Post;
 use App\Models\Staff;
@@ -24,10 +25,11 @@ class DatabaseSeeder extends Seeder {
 			'type' => 'staff',
 		]);
 
-		Student::factory(300)->create();
-		Staff::factory(30)->create();
-		Follower::factory(700)->create();
+		Student::factory(200)->create();
+		Staff::factory(20)->create();
+		Follower::factory(400)->create();
 
-		Post::factory(1000)->create();
+		Post::factory(500)->create();
+		Comment::factory(750)->create();
 	}
 }
