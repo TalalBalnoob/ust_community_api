@@ -31,5 +31,7 @@ class DatabaseSeeder extends Seeder {
 
 		Post::factory(500)->create();
 		Comment::factory(750)->create();
+
+		$this->call(role_majorSeeder::class);
 	}
 }

@@ -12,5 +12,9 @@ class Staff extends Model {
 		return $this->hasOne(User::class);
 	}
 
+	public function role(): HasOne {
+		return $this->hasOne(Role::class);
+	}
+
 	use HasFactory;
 }

@@ -12,5 +12,9 @@ class Student extends Model {
 		return $this->hasOne(User::class);
 	}
 
+	public function major(): HasOne {
+		return $this->hasOne(Major::class);
+	}
+
 	use HasFactory;
 }
