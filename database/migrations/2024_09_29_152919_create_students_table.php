@@ -13,7 +13,7 @@ return new class extends Migration {
 		Schema::create('majors', function (Blueprint $table) {
 			$table->id();
 			$table->string('major')->unique();
-			$table->integer('yeas_of_study');
+			$table->integer('years_of_study');
 			$table->string('department');
 		});
 

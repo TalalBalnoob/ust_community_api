@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Major extends Model {
 
+	public $timestamps = false;
+
 	public function student(): BelongsTo {
 		return $this->belongsTo(Student::class);
 	}

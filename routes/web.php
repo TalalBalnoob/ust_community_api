@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Major;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -8,5 +9,6 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-	return 'PHP and DOCKER are good!';
+	$major = Major::all()->random();
+	dd($major['years_of_study']);
 });

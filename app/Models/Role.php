@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Role extends Model {
 
+	public $timestamps = false;
+
 	public function staff(): BelongsTo {
 		return $this->belongsTo(Staff::class);
 	}

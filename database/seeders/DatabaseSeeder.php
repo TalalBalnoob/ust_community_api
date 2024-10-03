@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder {
 	 * Seed the application's database.
 	 */
 	public function run(): void {
+		$this->call(role_majorSeeder::class);
 		UserType::factory()->create([
 			'type' => 'student',
 		]);
@@ -31,7 +32,5 @@ class DatabaseSeeder extends Seeder {
 
 		Post::factory(500)->create();
 		Comment::factory(750)->create();
-
-		$this->call(role_majorSeeder::class);
 	}
 }

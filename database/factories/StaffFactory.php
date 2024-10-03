@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,10 +16,10 @@ class StaffFactory extends Factory {
 	 * @return array<string, mixed>
 	 */
 	public function definition(): array {
+		$role = Role::all()->random();
 		return [
 			'displayName' => fake()->firstName() . ' ' . fake()->lastName(),
-			'department' => 'Engineering and Computer Science',
-			'role' => fake()->randomElement(['lecturer', 'head of department']),
+			'role_id' => $role['id'],
 			'user_id' => User::factory()->create([
 				'user_type_id' => 2
 			])

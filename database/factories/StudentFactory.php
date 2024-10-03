@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Major;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,11 +16,11 @@ class StudentFactory extends Factory {
 	 * @return array<string, mixed>
 	 */
 	public function definition(): array {
+		$major = Major::all()->random();
 		return [
 			'displayName' => fake()->firstName() . ' ' . fake()->lastName(),
-			'department' => 'Engineering and Computer Science',
-			'major' => fake()->randomElement(['Information Technology', 'Architecture']),
-			'level' => fake()->randomElement([1, 2, 3, 4]),
+			'major_id' => $major['id'],
+			'level' => random_int(1, $major['years_of_study']),
 			'user_id' => User::factory()->create([
 				'user_type_id' => 1
 			])
