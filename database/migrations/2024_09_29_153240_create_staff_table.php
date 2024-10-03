@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,11 +15,15 @@ return new class extends Migration {
 			$table->id()->primary();
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 			$table->string('displayName');
-			$table->string('department');
-			$table->string('role');
+			$table->foreignId('role_id')->references('id')->on(Role::class);
 			$table->text('bio')->nullable();
 			$table->string('imageUrl')->nullable();
 			$table->timestamps();
+		});
+
+		Schema::create('roles', function (Blueprint $table) {
+			$table->id();
+			$table->string('role')->unique();
 		});
 	}
 

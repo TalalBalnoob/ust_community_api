@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Major;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,12 +15,18 @@ return new class extends Migration {
 			$table->id();
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 			$table->string('displayName');
-			$table->string('department');
-			$table->string('major');
+			$table->foreignId('major_id')->references('id')->on(Major::class);
 			$table->string('level');
 			$table->text('bio')->nullable();
 			$table->string('imageUrl')->nullable();
 			$table->timestamps();
+		});
+
+		Schema::create('majors', function (Blueprint $table) {
+			$table->id();
+			$table->string('major')->unique();
+			$table->integer('yeas_of_study');
+			$table->string('department');
 		});
 	}
 
@@ -28,5 +35,6 @@ return new class extends Migration {
 	 */
 	public function down(): void {
 		Schema::dropIfExists('students');
+		Schema::dropIfExists('majors');
 	}
 };
