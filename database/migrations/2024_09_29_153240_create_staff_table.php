@@ -11,19 +11,19 @@ return new class extends Migration {
 	 * Run the migrations.
 	 */
 	public function up(): void {
+		Schema::create('roles', function (Blueprint $table) {
+			$table->id();
+			$table->string('role')->unique();
+		});
+
 		Schema::create('staff', function (Blueprint $table) {
 			$table->id()->primary();
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 			$table->string('displayName');
-			$table->foreignId('role_id')->references('id')->on(Role::class);
+			$table->foreignId('role_id')->references('id')->on('roles');
 			$table->text('bio')->nullable();
 			$table->string('imageUrl')->nullable();
 			$table->timestamps();
-		});
-
-		Schema::create('roles', function (Blueprint $table) {
-			$table->id();
-			$table->string('role')->unique();
 		});
 	}
 

@@ -11,22 +11,22 @@ return new class extends Migration {
 	 * Run the migrations.
 	 */
 	public function up(): void {
-		Schema::create('students', function (Blueprint $table) {
-			$table->id();
-			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-			$table->string('displayName');
-			$table->foreignId('major_id')->references('id')->on(Major::class);
-			$table->string('level');
-			$table->text('bio')->nullable();
-			$table->string('imageUrl')->nullable();
-			$table->timestamps();
-		});
-
 		Schema::create('majors', function (Blueprint $table) {
 			$table->id();
 			$table->string('major')->unique();
 			$table->integer('yeas_of_study');
 			$table->string('department');
+		});
+
+		Schema::create('students', function (Blueprint $table) {
+			$table->id();
+			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+			$table->string('displayName');
+			$table->foreignId('major_id')->references('id')->on('majors');
+			$table->integer('level');
+			$table->text('bio')->nullable();
+			$table->string('imageUrl')->nullable();
+			$table->timestamps();
 		});
 	}
 
