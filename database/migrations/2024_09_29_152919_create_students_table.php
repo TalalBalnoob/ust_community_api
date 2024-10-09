@@ -23,6 +23,7 @@ return new class extends Migration {
 			$table->string('displayName');
 			$table->foreignId('major_id')->references('id')->on('majors');
 			$table->integer('level');
+			$table->string('branch')->default('Hadhramaut');
 			$table->text('bio')->nullable();
 			$table->string('imageUrl')->nullable();
 			$table->timestamps();

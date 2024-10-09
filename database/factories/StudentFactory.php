@@ -3,18 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Major;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
- */
 class StudentFactory extends Factory {
-	/**
-	 * Define the model's default state.
-	 *
-	 * @return array<string, mixed>
-	 */
+	protected static ?int $account_number = 202110500000;
 	public function definition(): array {
 		$major = Major::all()->random();
 		return [
@@ -22,7 +17,8 @@ class StudentFactory extends Factory {
 			'major_id' => $major['id'],
 			'level' => random_int(1, $major['years_of_study']),
 			'user_id' => User::factory()->create([
-				'user_type_id' => 1
+				'user_type_id' => 1,
+				'username' => static::$account_number++
 			])
 		];
 	}

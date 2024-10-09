@@ -11,7 +11,9 @@ class PostController extends Controller {
 	 * Display a listing of the resource.
 	 */
 	public function index() {
-		//
+		$pq = Post::query();
+
+		return $pq->paginate(20);
 	}
 
 	/**

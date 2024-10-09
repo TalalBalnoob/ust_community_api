@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -8,8 +10,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::post('/tokens/create', function (Request $request) {
-	$token = $request->user()->createToken($request->token_name);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
-	return ['token' => $token->plainTextToken];
-});
+Route::apiResource('posts', PostController::class);
