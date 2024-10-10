@@ -16,6 +16,7 @@ class StaffFactory extends Factory {
 		return [
 			'displayName' => fake()->firstName() . ' ' . fake()->lastName(),
 			'role_id' => $role['id'],
+			'branch' => 'Hadhramaut',
 			'user_id' => User::factory()->create([
 				'user_type_id' => 2,
 				'username' => static::$account_number++

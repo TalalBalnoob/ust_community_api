@@ -21,6 +21,7 @@ return new class extends Migration {
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 			$table->string('displayName');
 			$table->foreignId('role_id')->references('id')->on('roles');
+			$table->string('branch');
 			$table->text('bio')->nullable();
 			$table->string('imageUrl')->nullable();
 			$table->timestamps();

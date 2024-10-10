@@ -16,6 +16,7 @@ class StudentFactory extends Factory {
 			'displayName' => fake()->firstName() . ' ' . fake()->lastName(),
 			'major_id' => $major['id'],
 			'level' => random_int(1, $major['years_of_study']),
+			'branch' => 'Hadhramaut',
 			'user_id' => User::factory()->create([
 				'user_type_id' => 1,
 				'username' => static::$account_number++
