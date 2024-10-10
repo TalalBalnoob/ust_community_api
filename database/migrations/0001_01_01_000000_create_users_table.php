@@ -14,7 +14,7 @@ return new class extends Migration {
 			$table->id();
 			$table->bigInteger('username')->unique();
 			$table->string('password');
-			$table->boolean('isAdmin');
+			$table->boolean('isAdmin')->default(false);
 			$table->foreignIdFor(UserType::class);
 			$table->rememberToken();
 			$table->timestamps();

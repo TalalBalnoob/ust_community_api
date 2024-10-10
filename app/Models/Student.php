@@ -4,12 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends Model {
 
-	public function user(): HasOne {
-		return $this->hasOne(User::class);
+	protected $fillable = [
+		'displayName',
+		'major_id',
+		'level',
+		'branch',
+	];
+
+	public function user(): BelongsTo {
+		return $this->belongsTo(User::class);
 	}
 
 	public function major(): HasOne {

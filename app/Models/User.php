@@ -20,9 +20,10 @@ class User extends Authenticatable {
 	 * @var array<int, string>
 	 */
 	protected $fillable = [
-		'name',
-		'email',
+		'username',
 		'password',
+		'isAdmin',
+		'user_type_id'
 	];
 
 	/**
@@ -47,8 +48,8 @@ class User extends Authenticatable {
 		];
 	}
 
-	public function type(): HasOne {
-		return $this->hasOne(UserType::class);
+	public function type(): BelongsTo {
+		return $this->belongsTo(UserType::class);
 	}
 
 	public function posts(): HasMany {
@@ -68,11 +69,11 @@ class User extends Authenticatable {
 		return $this->hasMany(Bookmark::class);
 	}
 
-	public function student(): BelongsTo {
-		return $this->belongsTo(Student::class);
+	public function student(): HasOne {
+		return $this->hasOne(Student::class);
 	}
 
-	public function staff(): BelongsTo {
-		return $this->belongsTo(Staff::class);
+	public function staff(): HasOne {
+		return $this->hasOne(Staff::class);
 	}
 }
