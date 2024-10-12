@@ -4,43 +4,72 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Staff;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller {
-	/**
-	 * Display a listing of the resource.
-	 */
+
 	public function index() {
-		$pq = Post::query();
+		$pq = Post::query()->paginate();
 
-		return $pq->paginate(20);
+		return response(['posts' => $pq]);
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 */
+	// TODO: add the attachment store funcinolty
 	public function store(Request $request) {
-		//
+		$validateReq = $request->validate([
+			'title' => ['nullable', 'string', 'min:3', 'max:255'],
+			'body' => ['required', 'string'],
+			'attachment' => ['nullable', 'file']
+		]);
+
+		$newPost = new Post;
+
+		if ($validateReq['title']) $newPost['title'] = $validateReq['title'];
+
+		$newPost['body'] = $validateReq['body'];
+
+		$newPost['user_id'] = $request->user()['id'];
+
+		$newPost->save();
+
+		return response(['message' => 'new post has been added', 'post' => $newPost]);
 	}
 
-	/**
-	 * Display the specified resource.
-	 */
 	public function show(Post $post) {
-		//
+		$post['likes'] = $post->likes()->get()->count();
+		$post['comments'] = $post->comments()->get();
+
+		$poster_type = User::query()->find($post['user_id'])['user_type_id'];
+
+		if ($poster_type == 1) $post['poster'] = Student::query()->where('user_id', $post['user_id'])->first();
+		if ($poster_type == 2) $post['poster'] = Staff::query()->where('user_id', $post['user_id'])->first();
+
+		return response($post);
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 */
 	public function update(Request $request, Post $post) {
-		//
+		Gate::authorize('update', $post);
+
+		$validateReq = $request->validate([
+			'title' => ['nullable', 'string', 'min:3', 'max:255'],
+			'body' => ['required', 'string'],
+			'attachment' => ['nullable', 'file']
+		]);
+
+		$post->update($validateReq);
+
+		return response(['message' => 'update']);
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 */
-	public function destroy(Post $post) {
-		//
+	public function destroy(Request $request, Post $post) {
+		Gate::authorize('destroy', $post);
+
+		$post->delete();
+
+		return response(['message' => 'Post has been deleted']);
 	}
 }

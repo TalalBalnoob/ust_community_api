@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model {
 
+	protected $fillable = [
+		'title',
+		'body',
+		'attachment_url',
+	];
+
 	public function likes(): HasMany {
 		return $this->hasMany(Like::class);
 	}

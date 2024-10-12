@@ -17,4 +17,4 @@ Route::post('/register/staff', [AuthController::class, 'register_staff']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::apiResource('posts', PostController::class);
+Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');

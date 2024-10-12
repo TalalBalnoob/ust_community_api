@@ -20,7 +20,7 @@ class CommentFactory extends Factory {
 		$posts_list = Post::all('id');
 		return [
 			'user_id' => $users_list->random(),
-			'parent_post' => $posts_list->random(),
+			'post_id' => $posts_list->random(),
 			'body' => fake()->realTextBetween(50, 250),
 		];
 	}
