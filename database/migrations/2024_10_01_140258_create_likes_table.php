@@ -13,7 +13,7 @@ return new class extends Migration {
 	public function up(): void {
 		Schema::create('likes', function (Blueprint $table) {
 			$table->id();
-			$table->foreignIdFor(User::class);
+			$table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
 			$table->foreignId('post_id')->references('id')->on('posts')->cascadeOnDelete();
 			$table->timestamps();
 		});
