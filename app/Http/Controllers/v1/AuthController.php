@@ -92,10 +92,6 @@ class AuthController extends Controller {
 		]);
 
 		$queuedUser = User::query()->where('username', $user['username'])->first();
-		return User::query()->where('isAdmin', 0)
-			->orderBy('username')
-			->take(10)
-			->get();
 
 		if (!$queuedUser) {
 			abort(404, 'User not found');
