@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\FollowController;
 use App\Http\Controllers\v1\LikeController;
 use App\Http\Controllers\v1\PostController;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
 
-
 Route::put('/like/{post_id}', [LikeController::class, 'like'])->middleware('auth:sanctum');
 Route::delete('/unlike/{post_id}', [LikeController::class, 'unlike'])->middleware('auth:sanctum');
+
+Route::put('/follow/{followed_id}', [FollowController::class, 'follow'])->middleware('auth:sanctum');
+Route::delete('/follow/{followed_id}', [FollowController::class, 'unfollow'])->middleware('auth:sanctum');

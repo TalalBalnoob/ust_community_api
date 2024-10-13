@@ -29,6 +29,8 @@ class LikeController extends Controller {
 	public function unlike(Request $request, string $post_id) {
 		$isLiked = Like::query()->where('user_id', $request->user()['id'])->where('post_id', $post_id)->first();
 
+		if (!$isLiked) abort(404, 'like not found');
+
 		$isLiked->delete();
 
 		return response(['message' => 'like has been deleted']);
