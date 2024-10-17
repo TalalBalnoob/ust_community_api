@@ -4,41 +4,59 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller {
-	/**
-	 * Display a listing of the resource.
-	 */
-	public function index() {
-		//
+
+	public function index(Post $post) {
+		$comments = $post->comments()->get();
+
+		return Response(['comments' => $comments]);
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 */
-	public function store(Request $request) {
-		//
+	public function store(Request $request, Post $post) {
+		$validateReq = $request->validate([
+			'body' => ['required', 'string'],
+			'attachment' => ['nullable', 'file']
+		]);
+
+		$newComment = new Comment();
+
+		$newComment['user_id'] = $request->user()['id'];
+		$newComment['post_id'] = $post['id'];
+		$newComment['body'] = $validateReq['body'];
+		$newComment['attachment_url'] = null;
+
+		$newComment->save();
+
+		return response(['comment' => $newComment]);
 	}
 
-	/**
-	 * Display the specified resource.
-	 */
 	public function show(Comment $comment) {
 		//
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 */
-	public function update(Request $request, Comment $comment) {
-		//
+	public function update(Request $request, Post $post, Comment $comment) {
+		Gate::authorize('update', $comment);
+
+		$validateReq = $request->validate([
+			'body' => ['required', 'string'],
+			'attachment' => ['nullable', 'file']
+		]);
+
+		$comment->update($validateReq);
+
+		return response(['message' => 'Comment has been updated']);
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 */
-	public function destroy(Comment $comment) {
-		//
+	public function destroy(Post $post, Comment $comment) {
+		Gate::authorize('destroy', $comment);
+
+		$comment->delete();
+
+		return response(['message' => 'Comment has been deleted']);
 	}
 }

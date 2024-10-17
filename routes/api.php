@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\CommentController;
 use App\Http\Controllers\v1\FollowController;
 use App\Http\Controllers\v1\LikeController;
 use App\Http\Controllers\v1\PostController;
@@ -26,3 +27,5 @@ Route::delete('/unlike/{post_id}', [LikeController::class, 'unlike'])->middlewar
 
 Route::put('/follow/{followed_id}', [FollowController::class, 'follow'])->middleware('auth:sanctum');
 Route::delete('/follow/{followed_id}', [FollowController::class, 'unfollow'])->middleware('auth:sanctum');
+
+Route::apiResource('posts.comments', CommentController::class)->except('show')->middleware('auth:sanctum');

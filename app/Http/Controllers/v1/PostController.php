@@ -19,6 +19,7 @@ class PostController extends Controller {
 	}
 
 	// TODO: add the attachment store funcinolty
+	// FIXME: fix the errors 😢
 	public function store(Request $request) {
 		$validateReq = $request->validate([
 			'title' => ['nullable', 'string', 'min:3', 'max:255'],
