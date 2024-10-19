@@ -40,10 +40,6 @@ class CommentController extends Controller {
 		return response(['comment' => $newComment]);
 	}
 
-	public function show(Comment $comment) {
-		//
-	}
-
 	public function update(Request $request, Post $post, Comment $comment) {
 		Gate::authorize('update', $comment);
 
