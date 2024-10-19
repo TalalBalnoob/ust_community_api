@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Post;
@@ -13,6 +14,10 @@ class CommentController extends Controller {
 
 	public function index(Post $post) {
 		$comments = $post->comments()->get();
+
+		foreach ($comments->all() as $comment) {
+			$comment['commenter'] = Helper::addUserProfileInfo($comment['user_id']);
+		}
 
 		return Response(['comments' => $comments]);
 	}
