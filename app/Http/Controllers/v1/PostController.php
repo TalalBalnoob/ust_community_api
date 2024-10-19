@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
-use App\Models\Staff;
-use App\Models\Student;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -44,10 +42,7 @@ class PostController extends Controller {
 		$post['likes'] = $post->likes()->get()->count();
 		$post['comments'] = $post->comments()->get();
 
-		$poster_type = User::query()->find($post['user_id'])['user_type_id'];
-
-		if ($poster_type == 1) $post['poster'] = Student::query()->where('user_id', $post['user_id'])->first();
-		if ($poster_type == 2) $post['poster'] = Staff::query()->where('user_id', $post['user_id'])->first();
+		$post['poster'] = Helper::addUserProfileInfo($post['user_id']);
 
 		return response($post);
 	}
