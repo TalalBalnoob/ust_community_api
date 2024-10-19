@@ -11,13 +11,18 @@ use Illuminate\Support\Facades\Gate;
 class PostController extends Controller {
 
 	public function index() {
-		$pq = Post::query()->paginate();
+		$post_page = Post::query()->paginate();
 
-		return response(['posts' => $pq]);
+		foreach ($post_page->items() as $post) {
+			$post['likes'] = $post->likes()->get()->count();
+			$post['comments'] = $post->comments()->get();
+			$post['poster'] = Helper::addUserProfileInfo($post['user_id']);
+		}
+
+		return response(['posts' => $post_page]);
 	}
 
 	// TODO: add the attachment store funcinolty
-	// FIXME: fix the errors 😢
 	public function store(Request $request) {
 		$validateReq = $request->validate([
 			'title' => ['nullable', 'string', 'min:3', 'max:255'],
