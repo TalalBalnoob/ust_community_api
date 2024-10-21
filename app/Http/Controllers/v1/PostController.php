@@ -16,8 +16,13 @@ class PostController extends Controller {
 		foreach ($post_page->items() as $post) {
 			$post['likes'] = $post->likes()->get()->count();
 			$post['comments'] = $post->comments()->get();
-			$post['poster'] = Helper::addUserProfileInfo($post['user_id']);
+			$post['user'] = Helper::addUserProfileInfo($post['user_id']);
+
+			foreach ($post['comments'] as $comment) {
+				$comment['user'] = Helper::addUserProfileInfo($comment['user_id']);
+			}
 		}
+
 
 		return response(['posts' => $post_page]);
 	}
@@ -47,7 +52,7 @@ class PostController extends Controller {
 		$post['likes'] = $post->likes()->get()->count();
 		$post['comments'] = $post->comments()->get();
 
-		$post['poster'] = Helper::addUserProfileInfo($post['user_id']);
+		$post['user'] = Helper::addUserProfileInfo($post['user_id']);
 
 		return response($post);
 	}
