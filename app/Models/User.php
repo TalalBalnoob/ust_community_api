@@ -76,4 +76,13 @@ class User extends Authenticatable {
 	public function staff(): HasOne {
 		return $this->hasOne(Staff::class);
 	}
+
+	public static function addUserProfileInfo(string $user_id) {
+		$user = User::query()->find($user_id);
+
+		if ($user['user_type_id'] == 1) return Student::query()->where('user_id', $user['id'])->first();
+		if ($user['user_type_id'] == 2) return Staff::query()->where('user_id', $user['id'])->first();
+
+		return $user;
+	}
 }

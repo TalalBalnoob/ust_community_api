@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
@@ -16,7 +16,7 @@ class CommentController extends Controller {
 		$comments = $post->comments()->get();
 
 		foreach ($comments->all() as $comment) {
-			$comment['user'] = Helper::addUserProfileInfo($comment['user_id']);
+			$comment['user'] = User::addUserProfileInfo($comment['user_id']);
 		}
 
 		return Response(['comments' => $comments]);

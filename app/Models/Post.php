@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,7 +35,7 @@ class Post extends Model {
 		$this['isLiked'] = Like::query()->where('user_id', $user['id'])->where('post_id', $this['id'])->get()->count() === 1 ? true : false;
 		$this['likes'] = $this->likes()->get()->count();
 
-		$this['user'] = Helper::addUserProfileInfo($this['user_id']);
+		$this['user'] = User::addUserProfileInfo($this['user_id']);
 
 		$this->addComments();
 
@@ -47,7 +46,7 @@ class Post extends Model {
 		$this['comments'] = $this->comments()->get();
 
 		foreach ($this['comments'] as $comment) {
-			$comment['user'] = Helper::addUserProfileInfo($comment['user_id']);
+			$comment['user'] = User::addUserProfileInfo($comment['user_id']);
 		}
 
 		return $this;
