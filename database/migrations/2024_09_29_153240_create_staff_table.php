@@ -17,7 +17,7 @@ return new class extends Migration {
 		});
 
 		Schema::create('staff', function (Blueprint $table) {
-			$table->id()->primary();
+			$table->id();
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 			$table->string('displayName');
 			$table->foreignId('role_id')->references('id')->on('roles');

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -10,19 +9,12 @@ use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller {
 
-	public function index() {
-		$post_page = Post::query()->paginate();
+	public function index(Request $request, Post $post) {
+		$post_page = Post::query()->paginate(50);
 
 		foreach ($post_page->items() as $post) {
-			$post['likes'] = $post->likes()->get()->count();
-			$post['comments'] = $post->comments()->get();
-			$post['user'] = Helper::addUserProfileInfo($post['user_id']);
-
-			foreach ($post['comments'] as $comment) {
-				$comment['user'] = Helper::addUserProfileInfo($comment['user_id']);
-			}
+			$post->addRegularPostInfo($request->user());
 		}
-
 
 		return response(['posts' => $post_page]);
 	}
@@ -48,11 +40,8 @@ class PostController extends Controller {
 		return response(['message' => 'new post has been added', 'post' => $newPost]);
 	}
 
-	public function show(Post $post) {
-		$post['likes'] = $post->likes()->get()->count();
-		$post['comments'] = $post->comments()->get();
-
-		$post['user'] = Helper::addUserProfileInfo($post['user_id']);
+	public function show(Post $post, Request $request) {
+		$post->addRegularPostInfo($request->user());
 
 		return response($post);
 	}

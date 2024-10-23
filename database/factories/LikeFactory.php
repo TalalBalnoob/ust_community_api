@@ -16,6 +16,15 @@ class LikeFactory extends Factory {
 	 * @return array<string, mixed>
 	 */
 	public function definition(): array {
-		return [];
+		$users_list = User::all('id');
+		$posts_list = Post::all('id');
+
+		$user = $users_list->random();
+		$post = $posts_list->random();
+
+		return [
+			'user_id' => $user,
+			'post_id' => $post
+		];
 	}
 }

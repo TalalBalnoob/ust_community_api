@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Comment;
 use App\Models\Follower;
+use App\Models\Like;
 use App\Models\Post;
 use App\Models\Staff;
 use App\Models\Student;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder {
 		Follower::factory(400)->create();
 
 		Post::factory(500)->create();
+		Like::factory(1000)->create();
 		Comment::factory(750)->create();
 	}
 }
