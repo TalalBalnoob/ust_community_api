@@ -19,7 +19,7 @@ class PostController extends Controller {
 		return response(['posts' => $post_page]);
 	}
 
-	// TODO: add the attachment store funcinolty
+	// TODO: add the attachment store funcinolty and store it 
 	public function store(Request $request) {
 		$validateReq = $request->validate([
 			'title' => ['nullable', 'string', 'min:3', 'max:255'],
