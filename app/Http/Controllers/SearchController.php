@@ -17,7 +17,7 @@ class SearchController extends Controller {
 			->get();
 
 		foreach ($posts as $post) {
-			$post->addRegularPostInfo($request->user());
+			$post->addRegularPostInfo($request->user()['id']);
 		}
 
 		$users = Student::query()

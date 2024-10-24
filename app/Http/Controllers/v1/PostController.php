@@ -41,7 +41,7 @@ class PostController extends Controller {
 	}
 
 	public function show(Post $post, Request $request) {
-		$post->addRegularPostInfo($request->user());
+		$post->addRegularPostInfo($request->user()['id']);
 
 		return response($post);
 	}

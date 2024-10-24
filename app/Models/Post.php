@@ -31,8 +31,8 @@ class Post extends Model {
 		return $this->belongsTo(User::class);
 	}
 
-	public function addRegularPostInfo($user) {
-		$this['isLiked'] = Like::query()->where('user_id', $user['id'])->where('post_id', $this['id'])->get()->count() === 1 ? true : false;
+	public function addRegularPostInfo($user_id) {
+		$this['isLiked'] = Like::query()->where('user_id', $user_id)->where('post_id', $this['id'])->get()->count() === 1 ? true : false;
 		$this['likes'] = $this->likes()->get()->count();
 
 		$this['user'] = User::addUserProfileInfo($this['user_id']);

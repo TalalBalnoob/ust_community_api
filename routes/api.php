@@ -7,7 +7,6 @@ use App\Http\Controllers\v1\CommentController;
 use App\Http\Controllers\v1\FollowController;
 use App\Http\Controllers\v1\LikeController;
 use App\Http\Controllers\v1\PostController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
