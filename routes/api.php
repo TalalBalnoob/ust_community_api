@@ -11,7 +11,6 @@ use App\Http\Middleware\IsAdminUser;
 use Illuminate\Support\Facades\Route;
 
 
-// TODO: add admin level tokens for use the register auth routes
 Route::post('/register/student', [AuthController::class, 'register_student'])->middleware('auth:sanctum', IsAdminUser::class);
 Route::post('/register/staff', [AuthController::class, 'register_staff'])->middleware('auth:sanctum', IsAdminUser::class);
 Route::delete('/register/{user_id}', [AuthController::class, 'delete_user'])->middleware('auth:sanctum', IsAdminUser::class);
