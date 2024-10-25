@@ -10,6 +10,10 @@ use App\Http\Controllers\v1\PostController;
 use App\Http\Middleware\IsAdminUser;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/test', function () {
+	return response('noting to test');
+});
+
 
 Route::post('/register/student', [AuthController::class, 'register_student'])->middleware('auth:sanctum', IsAdminUser::class);
 Route::post('/register/staff', [AuthController::class, 'register_staff'])->middleware('auth:sanctum', IsAdminUser::class);

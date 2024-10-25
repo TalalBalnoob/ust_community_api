@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\Request;
 
 class Post extends Model {
 
@@ -49,6 +50,15 @@ class Post extends Model {
 			$comment['user'] = User::addUserProfileInfo($comment['user_id']);
 		}
 
+		return $this;
+	}
+
+	public function storeImage($img) {
+		if ($img) {
+			$filename = date('YmdHi') . $img->getClientOriginalName();
+			$img->move(public_path('Image'), $filename);
+			$this['attachment_url'] = $filename;
+		}
 		return $this;
 	}
 

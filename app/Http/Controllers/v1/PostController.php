@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rules\File;
 
 class PostController extends Controller {
 
@@ -19,21 +20,19 @@ class PostController extends Controller {
 		return response(['posts' => $post_page]);
 	}
 
-	// TODO: add the attachment store funcinolty and store it 
 	public function store(Request $request) {
 		$validateReq = $request->validate([
 			'title' => ['nullable', 'string', 'min:3', 'max:255'],
 			'body' => ['required', 'string'],
-			'attachment' => ['nullable', 'file']
+			'attachment' => ['nullable', 'image']
 		]);
 
 		$newPost = new Post;
 
 		if ($validateReq['title']) $newPost['title'] = $validateReq['title'];
-
 		$newPost['body'] = $validateReq['body'];
-
 		$newPost['user_id'] = $request->user()['id'];
+		$newPost->storeImage($validateReq['attachment']);
 
 		$newPost->save();
 
