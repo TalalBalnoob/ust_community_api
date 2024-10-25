@@ -14,7 +14,7 @@ return new class extends Migration {
 	public function up(): void {
 		Schema::create('posts', function (Blueprint $table) {
 			$table->id();
-			$table->foreignIdFor(User::class)->constrained('users');
+			$table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
 			$table->string('title')->nullable();
 			$table->text('body');
 			$table->string('attachment_url')->nullable();

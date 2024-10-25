@@ -14,7 +14,7 @@ return new class extends Migration {
 		Schema::create('bookmarks', function (Blueprint $table) {
 			$table->id();
 			$table->foreignId('users')->references('id')->on('users')->cascadeOnDelete();
-			$table->foreignId('posts')->references('id')->on('posts');
+			$table->foreignId('posts')->references('id')->on('posts')->cascadeOnDelete();
 		});
 	}
 
