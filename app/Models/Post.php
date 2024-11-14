@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model {
 
@@ -53,14 +54,6 @@ class Post extends Model {
 		return $this;
 	}
 
-	public function storeImage($img) {
-		if ($img) {
-			$filename = date('YmdHi') . $img->getClientOriginalName();
-			$img->move(public_path('Image'), $filename);
-			$this['attachment_url'] = $filename;
-		}
-		return $this;
-	}
 
 	use HasFactory;
 }
