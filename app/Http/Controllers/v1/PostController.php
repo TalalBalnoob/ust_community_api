@@ -10,9 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 
 class PostController extends Controller {
-
 	public function index(Request $request, Post $post) {
-		$post_page = Post::query()->paginate(50);
+		$post_page = Post::query()->latest()->paginate(10);
 
 		foreach ($post_page->items() as $post) {
 			$post->addRegularPostInfo($request->user());
@@ -28,9 +27,11 @@ class PostController extends Controller {
 			'attachment' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:5120']
 		]);
 
-		$newPost = new Post;
+		$newPost = new Post();
 
-		if ($validateReq['title']) $newPost['title'] = $validateReq['title'];
+		if ($validateReq['title']) {
+			$newPost['title'] = $validateReq['title'];
+		}
 		$newPost['body'] = $validateReq['body'];
 		$newPost['user_id'] = $request->user()['id'];
 		$newPost['attachment_url'] = isset($validateReq['attachment'])
