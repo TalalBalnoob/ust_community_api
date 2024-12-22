@@ -14,7 +14,7 @@ class PostController extends Controller {
 		$post_page = Post::query()->latest()->paginate(10);
 
 		foreach ($post_page->items() as $post) {
-			$post->addRegularPostInfo($request->user());
+			$post->addRegularPostInfo($request->user()['id']);
 		}
 
 		return response(['posts' => $post_page]);
@@ -43,10 +43,11 @@ class PostController extends Controller {
 		return response(['message' => 'new post has been added', 'post' => $newPost]);
 	}
 
-	public function show(Post $post, Request $request) {
+	public function show(int $postID, Request $request) {
+		$post = Post::query()->where('id', $postID)->get()->first();
 		$post->addRegularPostInfo($request->user()['id']);
 
-		return response($post);
+		return response(['data' => $post]);
 	}
 
 	public function update(Request $request, Post $post) {
