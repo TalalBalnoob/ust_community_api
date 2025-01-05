@@ -45,6 +45,9 @@ class PostController extends Controller {
 
 	public function show(int $postID, Request $request) {
 		$post = Post::query()->where('id', $postID)->get()->first();
+
+		if (!$post) return response(['message' => "not found"], 404);
+
 		$post->addRegularPostInfo($request->user()['id']);
 
 		return response(['data' => $post]);

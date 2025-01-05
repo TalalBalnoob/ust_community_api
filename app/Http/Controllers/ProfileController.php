@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Follower;
+use App\Models\Major;
 use App\Models\Post;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,6 +19,8 @@ class ProfileController extends Controller {
 		$user['followers'] = Follower::query()->where('followed_id', $user['id'])->get()->count();
 		$user['profile'] = User::addUserProfileInfo($user['id']);
 		$user['posts'] = Post::query()->where('user_id', $user['id'])->get();
+		if ($user->user_type_id === 1) $user['profile']['major'] = Major::where('id', $user['profile']['major_id'])->value('major');
+		if ($user->user_type_id === 2) $user['profile']['role'] = Role::where('id', $user['profile']['role_id'])->value('role');
 
 		foreach ($user['posts'] as $post) {
 			$post->addRegularPostInfo($user['id']);
@@ -37,6 +41,8 @@ class ProfileController extends Controller {
 		$user['followers'] = Follower::query()->where('followed_id', $user['id'])->get()->count();
 		$user['profile'] = User::addUserProfileInfo($user['id']);
 		$user['posts'] = Post::query()->where('user_id', $user['id'])->get();
+		if ($user->user_type_id === 1) $user['profile']['major'] = Major::where('id', $user['profile']['major_id'])->value('major');
+		if ($user->user_type_id === 2) $user['profile']['role'] = Role::where('id', $user['profile']['role_id'])->value('role');
 
 		foreach ($user['posts'] as $post) {
 			$post->addRegularPostInfo($user['id']);
