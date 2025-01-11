@@ -36,8 +36,9 @@ class CommentController extends Controller {
 		$newComment['attachment_url'] = null;
 
 		$newComment->save();
+		$newComment['user'] = User::addUserProfileInfo($request->user()['id']);
 
-		return response(['comment' => $newComment]);
+		return response($newComment);
 	}
 
 	public function update(Request $request, Post $post, Comment $comment) {
