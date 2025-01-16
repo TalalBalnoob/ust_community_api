@@ -48,7 +48,11 @@ class ProfileController extends Controller {
 			$post->addRegularPostInfo($user['id']);
 		}
 
-		$user['comments'] = Comment::query()->where('user_id', $user['id']);
+		$user['comments'] = Comment::query()->where('user_id', $user['id'])->get();
+
+		foreach ($user['comments']->all() as $comment) {
+			$comment['user'] = User::addUserProfileInfo($comment['user_id']);
+		}
 
 
 		return response(['user' => $user]);
