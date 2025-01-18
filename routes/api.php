@@ -25,6 +25,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::get('/user/profile', [ProfileController::class, 'getCurrentUserProfile'])->middleware('auth:sanctum');
 Route::get('/user/profile/{user_id}', [ProfileController::class, 'getUserProfile'])->middleware('auth:sanctum');
+Route::get('/user/profile/{user_id}/followers', [ProfileController::class, 'followers'])->middleware('auth:sanctum');
+Route::get('/user/profile/{user_id}/followings', [ProfileController::class, 'followings'])->middleware('auth:sanctum');
 
 Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
 

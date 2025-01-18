@@ -59,4 +59,32 @@ class ProfileController extends Controller {
 
 		return response(['user' => $user]);
 	}
+
+	public function followers(Request $request, string $user_id) {
+		$users = Follower::query()->where('followed_id', $user_id)->get('follower_id');
+		$users_res = new Collection();
+
+		foreach ($users as $follower) {
+			$res = User::query()->where('id', $follower->follower_id)->get()->first();
+			$res['profile'] = User::addUserProfileInfo($res['id']);
+
+			$users_res->add($res);
+		}
+
+		return response(['users' => $users_res]);
+	}
+
+	public function followings(Request $request, string $user_id) {
+		$users = Follower::query()->where('follower_id', $user_id)->get('followed_id');
+		$users_res = new Collection();
+
+		foreach ($users as $followed) {
+			$res = User::query()->where('id', $followed->followed_id)->get()->first();
+			$res['profile'] = User::addUserProfileInfo($res['id']);
+
+			$users_res->add($res);
+		}
+
+		return response(['users' => $users_res]);
+	}
 }
