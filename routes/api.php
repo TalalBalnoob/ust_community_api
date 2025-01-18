@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\CommentController;
 use App\Http\Controllers\v1\FollowController;
 use App\Http\Controllers\v1\LikeController;
 use App\Http\Controllers\v1\PostController;
+use App\Http\Controllers\v1\ProfileController;
+use App\Http\Controllers\v1\SearchController;
 use App\Http\Middleware\IsAdminUser;
 use Illuminate\Support\Facades\Route;
 
