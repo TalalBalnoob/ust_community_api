@@ -17,7 +17,7 @@ class PostController extends Controller {
 			$post->addRegularPostInfo($request->user()['id']);
 		}
 
-		return response(['posts' => $post_page]);
+		return response()->json($post_page->items());
 	}
 
 	public function store(Request $request) {
@@ -27,30 +27,29 @@ class PostController extends Controller {
 			'attachment' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:5120']
 		]);
 
-		$newPost = new Post();
-
-		if ($validateReq['title']) {
-			$newPost['title'] = $validateReq['title'];
+		$attachmentUrl = null;
+		if ($request->hasFile('attachment')) {
+			$attachmentUrl = $request->file('attachment')->store('attachments', 'public');
 		}
-		$newPost['body'] = $validateReq['body'];
-		$newPost['user_id'] = $request->user()['id'];
-		$newPost['attachment_url'] = isset($validateReq['attachment'])
-			? Storage::disk('public')->put('/', $validateReq['attachment'])
-			: null;
 
-		$newPost->save();
+		$newPost = Post::create([
+			'title' => $validateReq['title'] ?? null,
+			'body' => $validateReq['body'],
+			'user_id' => $request->user()['id'],
+			'attachment_url' => $attachmentUrl,
+		]);
 
-		return response(['message' => 'new post has been added', 'post' => $newPost]);
+		return response()->json($newPost, 201);
 	}
 
 	public function show(int $postID, Request $request) {
 		$post = Post::query()->where('id', $postID)->get()->first();
 
-		if (!$post) return response(['message' => "not found"], 404);
+		if (!$post) return response()->json(['message' => "not found"], 404);
 
 		$post->addRegularPostInfo($request->user()['id']);
 
-		return response(['data' => $post]);
+		return response()->json($post);
 	}
 
 	public function update(Request $request, Post $post) {
@@ -64,7 +63,7 @@ class PostController extends Controller {
 
 		$post->update($validateReq);
 
-		return response(['message' => 'update']);
+		return response()->json(['message' => 'post has been updated']);
 	}
 
 	public function destroy(Post $post) {
@@ -72,6 +71,6 @@ class PostController extends Controller {
 
 		$post->delete();
 
-		return response(['message' => 'Post has been deleted']);
+		return response()->json(['message' => 'Post has been deleted']);
 	}
 }

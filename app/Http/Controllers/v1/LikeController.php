@@ -13,26 +13,24 @@ class LikeController extends Controller {
 		$isPostExist = Post::query()->find($post_id);
 		$isLiked = Like::query()->where('user_id', $request->user()['id'])->where('post_id', $post_id)->first();
 
-		if ($isLiked) abort(400, 'bad request');
-		if (!$isPostExist) abort(400, 'bad request');
+		if ($isLiked) response()->json('already liked', 409);
+		if (!$isPostExist) response()->json('post dose not exist', 404);
 
-		$newLike = new Like([
+		Like::create([
 			'user_id' => $request->user()['id'],
 			'post_id' => $isPostExist['id']
 		]);
 
-		$newLike->save();
-
-		return response(['message' => 'like has been added']);
+		return response()->json(['message' => 'like has been added']);
 	}
 
 	public function unlike(Request $request, string $post_id) {
 		$isLiked = Like::query()->where('user_id', $request->user()['id'])->where('post_id', $post_id)->first();
 
-		if (!$isLiked) abort(404, 'like not found');
+		if (!$isLiked) response()->json('like not found', 404);
 
 		$isLiked->delete();
 
-		return response(['message' => 'like has been deleted']);
+		return response()->json(['message' => 'like has been deleted']);
 	}
 }

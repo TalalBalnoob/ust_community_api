@@ -9,56 +9,87 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class CommentController extends Controller {
 
 	public function index(Post $post) {
-		$comments = $post->comments()->get();
+		$comments = $post->comments()->with('user')->get();
 
-		foreach ($comments->all() as $comment) {
-			$comment['user'] = User::addUserProfileInfo($comment['user_id']);
-		}
+		$comments = $comments->map(function ($comment) {
+			$comment->user->profile = User::addUserProfileInfo($comment->user_id);
+			return $comment;
+		});
 
-		return Response(['comments' => $comments]);
+		return Response()->json($comments);
 	}
 
 	public function store(Request $request, Post $post) {
-		$validateReq = $request->validate([
+		// Validate the request input
+		$validated = $request->validate([
 			'body' => ['required', 'string'],
 			'attachment' => ['nullable', 'file']
 		]);
 
-		$newComment = new Comment();
+		// Handle attachment upload if present
+		$attachmentUrl = null;
+		if ($request->hasFile('attachment')) {
+			$attachmentUrl = $request->file('attachment')->store('attachments', 'public');
+		}
 
-		$newComment['user_id'] = $request->user()['id'];
-		$newComment['post_id'] = $post['id'];
-		$newComment['body'] = $validateReq['body'];
-		$newComment['attachment_url'] = null;
+		// Create a new comment using mass assignment
+		$newComment = Comment::create([
+			'user_id' => $request->user()->id,
+			'post_id' => $post->id,
+			'body' => $validated['body'],
+			'attachment_url' => $attachmentUrl,
+		]);
 
-		$newComment->save();
-		$newComment['user'] = User::addUserProfileInfo($request->user()['id']);
+		// Add user profile info to the comment
+		$newComment->user = User::query()->where('id', $request->user()->id)->get()->first();
+		$newComment->user->profile = User::addUserProfileInfo($request->user()->id);
 
-		return response($newComment);
+		// Return a JSON response with the new comment
+		return response()->json($newComment, 201);
 	}
 
 	public function update(Request $request, Post $post, Comment $comment) {
+		// Authorize the update action
 		Gate::authorize('update', $comment);
 
-		$validateReq = $request->validate([
+		// Validate the request input
+		$validated = $request->validate([
 			'body' => ['required', 'string'],
 			'attachment' => ['nullable', 'file']
 		]);
 
-		$comment->update($validateReq);
+		// Handle attachment upload if provided
+		if ($request->hasFile('attachment')) {
+			$validated['attachment_url'] = $request->file('attachment')->store('attachments', 'public');
+		}
 
-		return response(['message' => 'Comment has been updated']);
+		// Update the comment
+		$comment->update([
+			'body' => $validated['body'],
+			'attachment_url' => $validated['attachment_url'] ?? $comment->attachment_url,
+		]);
+
+		// Return a success response
+		return response()->json(['message' => 'Comment has been updated', 'comment' => $comment]);
 	}
 
 	public function destroy(Post $post, Comment $comment) {
+		// Authorize the delete action
 		Gate::authorize('destroy', $comment);
 
+		if ($comment->attachment_url) {
+			Storage::disk('public')->delete($comment->attachment_url);
+		}
+
+		// Delete the comment
 		$comment->delete();
 
-		return response(['message' => 'Comment has been deleted']);
+		// Return a success response
+		return response()->json(['message' => 'Comment has been deleted'], 200);
 	}
 }

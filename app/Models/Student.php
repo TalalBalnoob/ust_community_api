@@ -16,6 +16,11 @@ class Student extends Model {
 		'branch',
 	];
 
+	protected $hidden = [
+		'updated_at',
+		'created_at',
+	];
+
 	public function user(): BelongsTo {
 		return $this->belongsTo(User::class);
 	}

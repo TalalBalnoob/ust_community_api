@@ -14,19 +14,23 @@ Route::get('/test', function () {
 	return response('noting to test');
 });
 
+Route::group(['prefix' => 'register', 'middleware' => ['auth:sanctum', IsAdminUser::class]], function () {
+	Route::post('/student', [AuthController::class, 'register_student']);
+	Route::post('/staff', [AuthController::class, 'register_staff']);
+	Route::delete('/{user_id}', [AuthController::class, 'delete_user']);
+});
 
-Route::post('/register/student', [AuthController::class, 'register_student'])->middleware('auth:sanctum', IsAdminUser::class);
-Route::post('/register/staff', [AuthController::class, 'register_staff'])->middleware('auth:sanctum', IsAdminUser::class);
-Route::delete('/register/{user_id}', [AuthController::class, 'delete_user'])->middleware('auth:sanctum', IsAdminUser::class);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::group(['prefix' => 'user/profile', 'middleware' => 'auth:sanctum'], function () {
+	Route::get('/', [ProfileController::class, 'getCurrentUserProfile']);
+	Route::get('/{user_id}', [ProfileController::class, 'getUserProfile']);
+	Route::get('/{user_id}/followers', [ProfileController::class, 'followers']);
+	Route::get('/{user_id}/followings', [ProfileController::class, 'followings']);
+});
 
-Route::get('/user/profile', [ProfileController::class, 'getCurrentUserProfile'])->middleware('auth:sanctum');
-Route::get('/user/profile/{user_id}', [ProfileController::class, 'getUserProfile'])->middleware('auth:sanctum');
-Route::get('/user/profile/{user_id}/followers', [ProfileController::class, 'followers'])->middleware('auth:sanctum');
-Route::get('/user/profile/{user_id}/followings', [ProfileController::class, 'followings'])->middleware('auth:sanctum');
 
 Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
 

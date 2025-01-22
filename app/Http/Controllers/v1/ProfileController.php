@@ -31,7 +31,7 @@ class ProfileController extends Controller {
 		$user['comments'] = Comment::query()->where('user_id', $user['id']);
 
 
-		return response(['user' => $user]);
+		return response()->json($user);
 	}
 
 	public function getUserProfile(Request $request, string $user_id) {
@@ -57,34 +57,34 @@ class ProfileController extends Controller {
 		}
 
 
-		return response(['user' => $user]);
+		return response()->json($user);
 	}
 
 	public function followers(Request $request, string $user_id) {
 		$users = Follower::query()->where('followed_id', $user_id)->get('follower_id');
-		$users_res = new Collection();
+		$users_followers = new Collection();
 
 		foreach ($users as $follower) {
 			$res = User::query()->where('id', $follower->follower_id)->get()->first();
 			$res['profile'] = User::addUserProfileInfo($res['id']);
 
-			$users_res->add($res);
+			$users_followers->add($res);
 		}
 
-		return response(['users' => $users_res]);
+		return response()->json($users_followers);
 	}
 
 	public function followings(Request $request, string $user_id) {
 		$users = Follower::query()->where('follower_id', $user_id)->get('followed_id');
-		$users_res = new Collection();
+		$users_followings = new Collection();
 
 		foreach ($users as $followed) {
 			$res = User::query()->where('id', $followed->followed_id)->get()->first();
 			$res['profile'] = User::addUserProfileInfo($res['id']);
 
-			$users_res->add($res);
+			$users_followings->add($res);
 		}
 
-		return response(['users' => $users_res]);
+		return response()->json($users_followings);
 	}
 }

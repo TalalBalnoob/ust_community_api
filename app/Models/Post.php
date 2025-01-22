@@ -15,6 +15,7 @@ class Post extends Model {
 		'title',
 		'body',
 		'attachment_url',
+		'user_id'
 	];
 
 	public function likes(): HasMany {

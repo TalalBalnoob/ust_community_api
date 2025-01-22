@@ -24,9 +24,13 @@ class AuthController extends Controller {
 		]);
 
 		$isUserExist = User::query()->where('username', $user['username'])->first();
-		if ($isUserExist) abort(409, 'student already exists');
+		if ($isUserExist) {
+			abort(409, 'student already exists');
+		}
 
-		if (Major::query()->where('id', $user['major_id'])->get()->count() != 1) abort(422, 'undefine major id');
+		if (Major::query()->where('id', $user['major_id'])->get()->count() != 1) {
+			abort(422, 'undefine major id');
+		}
 
 		$newUser = User::create([
 			'password' => $user['password'],
@@ -44,10 +48,11 @@ class AuthController extends Controller {
 		]);
 
 		$newUser->student()->save($newStudent);
+		$user['profile'] = $newStudent;
 
 		$token = $newUser->createToken($newUser['id']);
 
-		return ['user' => $newUser, 'student_info' => $newStudent, 'token' => $token->plainTextToken];
+		return response(['user' => $newUser, 'token' => $token->plainTextToken]);
 	}
 
 	public function register_staff(Request $request) {
@@ -60,9 +65,13 @@ class AuthController extends Controller {
 		]);
 
 		$isUserExist = User::query()->where('username', $user['username'])->first();
-		if ($isUserExist) abort(409, 'staff already exists');
+		if ($isUserExist) {
+			abort(409, 'staff already exists');
+		}
 
-		if (Role::query()->where('id', $user['role_id'])->get()->count() != 1) abort(422, 'undefine role id');
+		if (Role::query()->where('id', $user['role_id'])->get()->count() != 1) {
+			abort(422, 'undefine role id');
+		}
 
 		$newUser = User::create([
 			'password' => $user['password'],
@@ -79,10 +88,11 @@ class AuthController extends Controller {
 		]);
 
 		$newUser->staff()->save($newStaff);
+		$newUser['profile'] = $newStaff;
 
 		$token = $newUser->createToken($newUser['id']);
 
-		return ['user' => $newUser, 'staff_info' => $newStaff, 'token' => $token->plainTextToken];
+		return response(['user' => $newUser, 'token' => $token->plainTextToken]);
 	}
 
 	public function delete_user(Request $request) {
@@ -114,12 +124,12 @@ class AuthController extends Controller {
 
 		$token = $queuedUser->createToken($queuedUser['id']);
 
-		return response()->json(['user' => $queuedUser, 'token' => $token->plainTextToken], 200);
+		return response(['user' => $queuedUser, 'token' => $token->plainTextToken]);
 	}
 
 	public function logout(Request $request) {
 		$request->user()->tokens()->delete();
 
-		return ['message' => 'tokens has been deleted'];
+		return response(['message' => 'user logout']);
 	}
 }

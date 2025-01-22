@@ -12,26 +12,24 @@ class FollowController extends Controller {
 		$isUserExist = User::query()->find($followed_id);
 		$isFollowed = Follower::query()->where('follower_id', $request->user()['id'])->where('followed_id', $followed_id)->first();
 
-		if ($isFollowed) abort(409, 'already followed');
-		if (!$isUserExist) abort(404, 'user dose not exist');
+		if ($isFollowed) response()->json('already followed', 409);
+		if (!$isUserExist) response()->json('user dose not exist', 404);
 
-		$newFollow = new Follower([
+		Follower::create([
 			'follower_id' => $request->user()['id'],
 			'followed_id' => $isUserExist['id']
 		]);
 
-		$newFollow->save();
-
-		return response(['message' => 'user has been followed']);
+		return response()->json(['message' => 'user has been followed']);
 	}
 
 	public function unfollow(Request $request, string $followed_id) {
 		$isFollowed = Follower::query()->where('follower_id', $request->user()['id'])->where('followed_id', $followed_id)->first();
 
-		if (!$isFollowed) abort(404, 'follow not found');
+		if (!$isFollowed) response()->json('follow not found', 404);
 
 		$isFollowed->delete();
 
-		return response(['message' => 'user has been un followed']);
+		return response()->json(['message' => 'user has been un followed']);
 	}
 }
