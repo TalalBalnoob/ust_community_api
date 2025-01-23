@@ -14,27 +14,11 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller {
 
-	public function getCurrentUserProfile(Request $request) {
-		$user = $request->user();
-
-		$user['following'] = Follower::query()->where('follower_id', $user['id'])->get()->count();
-		$user['followers'] = Follower::query()->where('followed_id', $user['id'])->get()->count();
-		$user['profile'] = User::addUserProfileInfo($user['id']);
-		$user['posts'] = Post::query()->where('user_id', $user['id'])->get();
-		if ($user->user_type_id === 1) $user['profile']['major'] = Major::where('id', $user['profile']['major_id'])->value('major');
-		if ($user->user_type_id === 2) $user['profile']['role'] = Role::where('id', $user['profile']['role_id'])->value('role');
-
-		foreach ($user['posts'] as $post) {
-			$post->addRegularPostInfo($user['id']);
+	public function getUserProfile(Request $request, string $user_id) {
+		if (!$user_id) {
+			$user_id = $request->user()->id;
 		}
 
-		$user['comments'] = Comment::query()->where('user_id', $user['id']);
-
-
-		return response()->json($user);
-	}
-
-	public function getUserProfile(Request $request, string $user_id) {
 		$user = User::query()->find($user_id);
 
 		if (!$user) abort(404, 'User Not found');
@@ -52,10 +36,9 @@ class ProfileController extends Controller {
 
 		$user['comments'] = Comment::query()->where('user_id', $user['id'])->get();
 
-		foreach ($user['comments']->all() as $comment) {
-			$comment['user'] = User::addUserProfileInfo($comment['user_id']);
+		foreach ($user['comments'] as $comment) {
+			$comment['user']['profile'] = User::addUserProfileInfo($comment['user_id']);
 		}
-
 
 		return response()->json($user);
 	}

@@ -29,6 +29,6 @@ class SearchController extends Controller {
 			->where('displayName', 'LIKE', "%{$searchText}%")
 			->get());
 
-		return response(['results' => ['posts' => $posts, 'users' => $users]]);
+		return response()->json(['posts' => $posts, 'users' => $users]);
 	}
 }
