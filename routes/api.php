@@ -26,6 +26,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::group(['prefix' => 'user/profile', 'middleware' => 'auth:sanctum'], function () {
 	Route::get('/', [ProfileController::class, 'getUserProfile']);
+	Route::put('/', [ProfileController::class, 'editUserProfile']);
 	Route::get('/{user_id}', [ProfileController::class, 'getUserProfile']);
 	Route::get('/{user_id}/followers', [ProfileController::class, 'followers']);
 	Route::get('/{user_id}/followings', [ProfileController::class, 'followings']);
