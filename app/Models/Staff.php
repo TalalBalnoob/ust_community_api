@@ -12,6 +12,7 @@ class Staff extends Model {
 		'displayName',
 		'role_id',
 		'branch',
+		'imageUrl'
 	];
 
 	public function user(): HasOne {

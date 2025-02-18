@@ -14,6 +14,7 @@ class Student extends Model {
 		'major_id',
 		'level',
 		'branch',
+		'imageUrl'
 	];
 
 	protected $hidden = [

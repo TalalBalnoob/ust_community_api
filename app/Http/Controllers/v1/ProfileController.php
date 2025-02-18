@@ -8,6 +8,7 @@ use App\Models\Follower;
 use App\Models\Major;
 use App\Models\Post;
 use App\Models\Role;
+use App\Models\Staff;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -48,16 +49,24 @@ class ProfileController extends Controller {
 		$user = $request->user();
 		if (!$user) abort(404, 'User Not found');
 
+
 		$validateReq = $request->validate([
 			'username' => ['nullable', 'string', 'min:3', 'max:32'],
 			'bio' => ['nullable', 'string', 'max:255'],
 			'attachment' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:5120']
 		]);
 
-		$profile = $user->user_type_id === 1 ? Student::find($user->id) : User::find($user->id);
 
-		if ($validateReq['username']) $profile->displayName = 'New Display Name';
-		if ($validateReq['bio']) $profile->bio = 'Updated bio content';
+		$profile = $user->user_type_id === 1 ? Student::find($user->id) : Staff::find($user->id);
+
+		$attachmentUrl = null;
+		if ($request->hasFile('attachment')) {
+			$attachmentUrl = $request->file('attachment')->store('profile', 'public');
+		}
+
+		if ($validateReq['username']) $profile->displayName = $validateReq['username'];
+		if ($validateReq['bio']) $profile->bio = $validateReq['bio'];
+		if ($attachmentUrl) $profile->imageUrl = $attachmentUrl;
 
 		$profile->save();
 
