@@ -8,29 +8,38 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class LikeController extends Controller {
-	public function like(Request $request, string $post_id) {
-		$isPostExist = Post::query()->find($post_id);
-		$isLiked = Like::query()->where('user_id', $request->user()['id'])->where('post_id', $post_id)->first();
+class LikeController extends Controller
+{
+    public function like(Request $request, string $post_id)
+    {
+        $isPostExist = Post::query()->find($post_id);
+        $isLiked = Like::query()->where('user_id', $request->user()['id'])->where('post_id', $post_id)->first();
 
-		if ($isLiked) response()->json('already liked', 409);
-		if (!$isPostExist) response()->json('post dose not exist', 404);
+        if ($isLiked) {
+            response()->json('already liked', 409);
+        }
+        if (!$isPostExist) {
+            response()->json('post dose not exist', 404);
+        }
 
-		Like::create([
-			'user_id' => $request->user()['id'],
-			'post_id' => $isPostExist['id']
-		]);
+        Like::create([
+            'user_id' => $request->user()['id'],
+            'post_id' => $isPostExist['id']
+        ]);
 
-		return response()->json(['message' => 'like has been added']);
-	}
+        return response()->json(['message' => 'like has been added']);
+    }
 
-	public function unlike(Request $request, string $post_id) {
-		$isLiked = Like::query()->where('user_id', $request->user()['id'])->where('post_id', $post_id)->first();
+    public function unlike(Request $request, string $post_id)
+    {
+        $isLiked = Like::query()->where('user_id', $request->user()['id'])->where('post_id', $post_id)->first();
 
-		if (!$isLiked) response()->json('like not found', 404);
+        if (!$isLiked) {
+            response()->json('like not found', 404);
+        }
 
-		$isLiked->delete();
+        $isLiked->delete();
 
-		return response()->json(['message' => 'like has been deleted']);
-	}
+        return response()->json(['message' => 'like has been deleted']);
+    }
 }

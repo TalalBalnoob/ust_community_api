@@ -6,39 +6,43 @@ use App\Http\Controllers\Controller;
 use App\Models\Report;
 use Illuminate\Http\Request;
 
-class ReportController extends Controller {
-	/**
-	 * Display a listing of the resource.
-	 */
-	public function index() {
-		//
-	}
+class ReportController extends Controller
+{
+    public function index()
+    {
+        $reports = Report::query()->get()->all();
 
-	/**
-	 * Store a newly created resource in storage.
-	 */
-	public function store(Request $request) {
-		//
-	}
+        return Response()->json($reports);
+    }
 
-	/**
-	 * Display the specified resource.
-	 */
-	public function show(Report $report) {
-		//
-	}
+    public function show(Request $request, string $reportID)
+    {
+        $report = Report::query()->find($reportID);
 
-	/**
-	 * Update the specified resource in storage.
-	 */
-	public function update(Request $request, Report $report) {
-		//
-	}
+        return Response()->json($report);
+    }
 
-	/**
-	 * Remove the specified resource from storage.
-	 */
-	public function destroy(Report $report) {
-		//
-	}
+    public function review(Request $request, string $reportID)
+    {
+        $report = Report::query()->find($reportID);
+
+        if (!$report) {
+            abort(404, 'report not found');
+        }
+        if ($report->isReviewed) {
+            abort(400, 'Report has been reviewd');
+        }
+
+        $report->isReviewed = true;
+        $report->reviewer_id = $request->user()->id;
+
+        $report->update(
+            [
+            "isReviewed" => true,
+            "reviewer_id" => $request->user()->id
+            ]
+        );
+
+        return Response()->json('report is reviewd now');
+    }
 }

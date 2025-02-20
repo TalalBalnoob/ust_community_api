@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller {
-
 	public function getUserProfile(Request $request, string $user_id) {
 		if (!$user_id) {
 			$user_id = $request->user()->id;
@@ -23,14 +22,20 @@ class ProfileController extends Controller {
 
 		$user = User::query()->find($user_id);
 
-		if (!$user) abort(404, 'User Not found');
+		if (!$user) {
+			abort(404, 'User Not found');
+		}
 
 		$user['following'] = Follower::query()->where('follower_id', $user['id'])->get()->count();
 		$user['followers'] = Follower::query()->where('followed_id', $user['id'])->get()->count();
 		$user['profile'] = User::addUserProfileInfo($user['id']);
 		$user['posts'] = Post::query()->where('user_id', $user['id'])->get();
-		if ($user->user_type_id === 1) $user['profile']['major'] = Major::where('id', $user['profile']['major_id'])->value('major');
-		if ($user->user_type_id === 2) $user['profile']['role'] = Role::where('id', $user['profile']['role_id'])->value('role');
+		if ($user->user_type_id === 1) {
+			$user['profile']['major'] = Major::where('id', $user['profile']['major_id'])->value('major');
+		}
+		if ($user->user_type_id === 2) {
+			$user['profile']['role'] = Role::where('id', $user['profile']['role_id'])->value('role');
+		}
 
 		foreach ($user['posts'] as $post) {
 			$post->addRegularPostInfo($user['id']);
@@ -47,7 +52,9 @@ class ProfileController extends Controller {
 
 	public function editUserProfile(Request $request) {
 		$user = $request->user();
-		if (!$user) abort(404, 'User Not found');
+		if (!$user) {
+			abort(404, 'User Not found');
+		}
 
 
 		$validateReq = $request->validate([
@@ -64,15 +71,25 @@ class ProfileController extends Controller {
 			$attachmentUrl = $request->file('attachment')->store('profile', 'public');
 		}
 
-		if ($validateReq['username']) $profile->displayName = $validateReq['username'];
-		if ($validateReq['bio']) $profile->bio = $validateReq['bio'];
-		if ($attachmentUrl) $profile->imageUrl = $attachmentUrl;
+		if ($validateReq['username']) {
+			$profile->displayName = $validateReq['username'];
+		}
+		if ($validateReq['bio']) {
+			$profile->bio = $validateReq['bio'];
+		}
+		if ($attachmentUrl) {
+			$profile->imageUrl = $attachmentUrl;
+		}
 
 		$profile->save();
 
 		$user['profile'] = User::addUserProfileInfo($user['id']);
-		if ($user->user_type_id === 1) $user['profile']['major'] = Major::where('id', $user['profile']['major_id'])->value('major');
-		if ($user->user_type_id === 2) $user['profile']['role'] = Role::where('id', $user['profile']['role_id'])->value('role');
+		if ($user->user_type_id === 1) {
+			$user['profile']['major'] = Major::where('id', $user['profile']['major_id'])->value('major');
+		}
+		if ($user->user_type_id === 2) {
+			$user['profile']['role'] = Role::where('id', $user['profile']['role_id'])->value('role');
+		}
 
 		return response()->json($user);
 	}

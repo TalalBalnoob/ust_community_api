@@ -95,16 +95,6 @@ class AuthController extends Controller {
 		return response(['user' => $newUser, 'token' => $token->plainTextToken]);
 	}
 
-	public function delete_user(Request $request) {
-		$targetUserId = $request['user_id'];
-
-		$targetUser = User::query()->find($targetUserId);
-
-		$targetUser ? $targetUser->delete() : abort(404, 'user not found');
-
-		return response(['message' => 'user has been deleted']);
-	}
-
 	// TODO: add try catch for catch login errors as {error_name: ex 'username', error_msg: msg}
 	public function login(Request $request) {
 		$user = $request->validate([

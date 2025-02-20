@@ -7,25 +7,27 @@ use Illuminate\Support\Facades\Schema;
 
 use function Laravel\Prompts\table;
 
-return new class extends Migration {
-	/**
-	 * Run the migrations.
-	 */
-	public function up(): void {
-		Schema::create('posts', function (Blueprint $table) {
-			$table->id();
-			$table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
-			$table->string('title')->nullable();
-			$table->text('body');
-			$table->string('attachment_url')->nullable();
-			$table->timestamps();
-		});
-	}
+return new class () extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+            $table->string('title')->nullable();
+            $table->text('body');
+            $table->string('attachment_url')->nullable();
+            $table->timestamps();
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 */
-	public function down(): void {
-		Schema::dropIfExists('posts');
-	}
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('posts');
+    }
 };

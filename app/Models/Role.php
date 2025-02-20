@@ -13,5 +13,6 @@ class Role extends Model {
 	public function staff(): BelongsTo {
 		return $this->belongsTo(Staff::class);
 	}
+
 	use HasFactory;
 }
