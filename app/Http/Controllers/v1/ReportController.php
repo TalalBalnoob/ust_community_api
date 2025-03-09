@@ -25,16 +25,16 @@ class ReportController extends Controller
         return Response()->json($reports);
     }
 
-    public function show(Request $request, string $reportID)
+    public function show(Request $request, string $report_id)
     {
-        $report = Report::query()->find($reportID);
+        $report = Report::query()->find($report_id);
 
         return Response()->json($report);
     }
 
-    public function review(Request $request, string $reportID)
+    public function review(Request $request, string $report_id)
     {
-        $report = Report::query()->find($reportID);
+        $report = Report::query()->find($report_id);
 
         if (!$report) {
             abort(404, 'report not found');
@@ -54,5 +54,28 @@ class ReportController extends Controller
         );
 
         return Response()->json('report is reviewed now');
+    }
+
+    // TODO: look if it will be ever used again
+    public function takeAction(Request $request, string $report_id)
+    {
+        $action_id = $request['action'];
+
+        $report = Report::query()->find($report_id);
+
+        if (!$report) {
+            abort(404, 'report not found');
+        }
+        if ($report->isReviewed) {
+            abort(400, 'Report has been reviewed');
+        }
+
+        $report->update(
+            [
+                "action" => $action_id,
+            ]
+        );
+
+        return Response()->json('action has been took on reports');
     }
 }

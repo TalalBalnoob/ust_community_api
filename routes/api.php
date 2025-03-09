@@ -18,6 +18,9 @@ Route::get(
     }
 );
 
+Route::get('/token', [AuthController::class, 'checkToken'])
+    ->middleware('auth:sanctum');
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth:sanctum');
@@ -58,6 +61,7 @@ Route::group(
     ['prefix' => 'admin', 'middleware' => ['auth:sanctum', IsAdminUser::class]],
     function () {
         Route::get('users', [AdminController::class, 'getUserList']);
+        Route::get('user/{user_id}', [AdminController::class, 'showUser']);
         Route::put('user/{user_id}', [AdminController::class, 'updateUser']);
         Route::delete('users/{user_id}', [AdminController::class, 'deleteUser']);
 
