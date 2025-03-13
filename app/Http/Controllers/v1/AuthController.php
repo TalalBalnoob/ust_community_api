@@ -113,6 +113,7 @@ class AuthController extends Controller
     // TODO: add try catch for catch login errors as {error_name: ex 'username', error_msg: msg}
     public function login(Request $request)
     {
+
         $user = $request->validate([
             'username' => ['required', 'string'],
             'password' => ['required']

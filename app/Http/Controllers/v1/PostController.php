@@ -13,13 +13,15 @@ class PostController extends Controller
 {
     public function index(Request $request, Post $post)
     {
-        $post_page = Post::query()->latest()->paginate(10);
+        $page = $request->query('page', 1);
+
+        $post_page = Post::query()->latest()->paginate(10, ['*'], 'page', $page);
 
         foreach ($post_page->items() as $post) {
             $post->addRegularPostInfo($request->user()['id']);
         }
 
-        return response()->json($post_page->items());
+        return response()->json($post_page);
     }
 
     public function store(Request $request)
