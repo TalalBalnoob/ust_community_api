@@ -1,4 +1,4 @@
-# the api for the *UST Community*
+# the api for the _UST Community_
 
 ## Installing
 
@@ -33,18 +33,17 @@ php artisan migrate
 fill the database with dummy data for testing
 
 ```bash
-php artisan key:generate
+php artisan db:seed
+```
+
+## active the storage for storing images
+
+```bash
+php artisan storage:link
 ```
 
 ## Start the server
 
 ```bash
-php artisan serve 
+php artisan serve
 ```
-
-<br>
-<br>
-<br>
-<br>
-
-> if it doesn't work just leave it and leave me alone pls
