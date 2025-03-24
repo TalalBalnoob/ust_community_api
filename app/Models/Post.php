@@ -9,52 +9,59 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class Post extends Model {
+class Post extends Model
+{
 
-	protected $fillable = [
-		'title',
-		'body',
-		'attachment_url',
-		'user_id'
-	];
+    protected $fillable = [
+        'title',
+        'body',
+        'attachment_url',
+        'user_id'
+    ];
 
-	public function likes(): HasMany {
-		return $this->hasMany(Like::class);
-	}
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
 
-	public function comments(): HasMany {
-		return $this->hasMany(Comment::class);
-	}
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 
-	public function bookmarks(): HasMany {
-		return $this->hasMany(Bookmark::class);
-	}
+    public function bookmarks(): HasMany
+    {
+        return $this->hasMany(Bookmark::class);
+    }
 
-	public function user(): BelongsTo {
-		return $this->belongsTo(User::class);
-	}
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	public function addRegularPostInfo($user_id) {
-		$this['isLiked'] = Like::query()->where('user_id', $user_id)->where('post_id', $this['id'])->get()->count() === 1 ? true : false;
-		$this['likes'] = $this->likes()->get()->count();
+    public function addRegularPostInfo($user_id)
+    {
+        $this['isLiked'] = Like::query()->where('user_id', $user_id)->where('post_id', $this['id'])->get()->count() === 1 ? true : false;
+        $this['likes'] = $this->likes()->get()->count();
 
-		$this['user'] = User::addUserProfileInfo($this['user_id']);
+        $this['profile'] = User::addUserProfileInfo($this['user_id']);
 
-		$this->addComments();
+        $this->addComments();
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function addComments() {
-		$this['comments'] = $this->comments()->get();
+    public function addComments()
+    {
+        $this['comments'] = $this->comments()->get();
 
-		foreach ($this['comments'] as $comment) {
-			$comment['user'] = User::addUserProfileInfo($comment['user_id']);
-		}
+        foreach ($this['comments'] as $comment) {
+            $comment['user'] = User::addUserProfileInfo($comment['user_id']);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
 
-	use HasFactory;
+    use HasFactory;
 }

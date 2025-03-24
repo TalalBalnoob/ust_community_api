@@ -5,6 +5,8 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Like;
 use App\Models\Post;
+use App\Models\User;
+use App\Notifications\NewMediaNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -27,7 +29,10 @@ class LikeController extends Controller
             'post_id' => $isPostExist['id']
         ]);
 
-        return response()->json(['message' => 'like has been added']);
+        $postOwner = User::query()->find($isPostExist->user_id);
+        $postOwner->notify(new NewMediaNotification($postOwner->username));
+
+        return response()->json(['message' => 'Post has been liked']);
     }
 
     public function unlike(Request $request, string $post_id)
