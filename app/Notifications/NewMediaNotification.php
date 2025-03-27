@@ -6,8 +6,12 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class NewMediaNotification extends Notification
+class NewFollowNotification extends Notification
 {
+    public function __construct(public string $username)
+    {
+    }
+
     public function via($notifiable)
     {
         return ['database', 'broadcast']; // Supports mail, database, broadcast, slack, etc.
@@ -16,7 +20,8 @@ class NewMediaNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => 'New media content has been uploaded!',
+            'message' => $this->username . " follow your account",
+            'ar_message' => $this->username . "بداء بمتابتك ",
         ];
     }
 
