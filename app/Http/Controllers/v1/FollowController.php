@@ -15,7 +15,6 @@ class FollowController extends Controller
         $isUserExist = User::query()->find($followed_id);
         $isFollowed = Follower::query()->where('follower_id', $request->user()['id'])->where('followed_id', $followed_id)->first();
 
-
         if ($isFollowed) {
             return response()->json(['message' => 'already followed'], 409);
         }

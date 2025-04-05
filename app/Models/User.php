@@ -88,6 +88,17 @@ class User extends Authenticatable
         return $this->hasOne(Staff::class);
     }
 
+    public function profile()
+    {
+        $uesrAccountType = $this->user_type_id;
+
+        if ($uesrAccountType == 1) {
+            return $this->student()->get()->first();
+        } elseif ($uesrAccountType == 2) {
+            return $this->staff()->get()->first();
+        }
+    }
+
     public static function addUserProfileInfo(string $user_id)
     {
         $user = User::query()->find($user_id);
