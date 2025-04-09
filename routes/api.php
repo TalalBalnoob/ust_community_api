@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\v1\ActivityController;
 use App\Http\Controllers\v1\AdminController;
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\CommentController;
@@ -55,6 +56,9 @@ Route::delete('/follow/{followed_id}', [FollowController::class, 'unfollow'])
 Route::get('/search', [SearchController::class, 'search'])
     ->middleware('auth:sanctum');
 
+Route::get('/activity', [ActivityController::class, 'getAllUserActivitis'])->middleware('auth:sanctum');
+Route::get('/unreadActivity', [ActivityController::class, 'getUnreadUserActivitis'])->middleware('auth:sanctum');
+Route::post('/readActivity', [ActivityController::class, 'readActivity'])->middleware('auth:sanctum');
 
 // ############################# Admin Routes #############################
 Route::group(
