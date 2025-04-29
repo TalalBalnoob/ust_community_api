@@ -8,9 +8,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class NewFollowNotification extends Notification
 {
-    public function __construct(public string $username)
-    {
-    }
+    public function __construct(public string $username) {}
 
     public function via($notifiable)
     {
@@ -20,8 +18,9 @@ class NewFollowNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => $this->username . " follow your account",
-            'ar_message' => $this->username . "بداء بمتابتك ",
+            'type' => 'follow',
+            'username' => $this->username,
+            'user_id' => $notifiable->id,
         ];
     }
 

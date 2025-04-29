@@ -8,9 +8,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class CommentNotification extends Notification
 {
-    public function __construct(public string $username, public string $post_id)
-    {
-    }
+    public function __construct(public string $username, public string $post_id) {}
 
     public function via($notifiable)
     {
@@ -20,8 +18,9 @@ class CommentNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => $this->username . " commented on your post",
-            'ar_message' => $this->username . "علق على منشورك ",
+            'type' => 'comment',
+            'username' => $this->username,
+            'user_id' => $notifiable->id,
             'post_id' => $this->post_id
         ];
     }

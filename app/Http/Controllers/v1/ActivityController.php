@@ -3,23 +3,24 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NotificationResource;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
     public function getAllUserActivitis(Request $request)
     {
-        $notifications = $request->user()->notifications;
+        $notifications = NotificationResource::collection($request->user()->notifications);
 
-        return response()->json(['data' => $notifications], 200);
+        return response()->json($notifications, 200);
     }
 
 
     public function getUnreadUserActivitis(Request $request)
     {
-        $notifications = $request->user()->unreadNotifications;
+        $notifications = NotificationResource::collection($request->user()->unreadNotifications);
 
-        return response()->json(['data' => $notifications], 200);
+        return response()->json($notifications, 200);
     }
 
     public function readActivity(Request $request)

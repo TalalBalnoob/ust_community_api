@@ -3,6 +3,7 @@
 use App\Http\Controllers\v1\ActivityController;
 use App\Http\Controllers\v1\AdminController;
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\BookmarkController;
 use App\Http\Controllers\v1\CommentController;
 use App\Http\Controllers\v1\FollowController;
 use App\Http\Controllers\v1\LikeController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\v1\PostController;
 use App\Http\Controllers\v1\ProfileController;
 use App\Http\Controllers\v1\SearchController;
 use App\Http\Middleware\IsAdminUser;
+use App\Models\Bookmark;
 use Illuminate\Support\Facades\Route;
 
 Route::get(
@@ -46,6 +48,14 @@ Route::apiResource('posts.comments', CommentController::class)
 Route::put('/like/{post_id}', [LikeController::class, 'like'])
     ->middleware('auth:sanctum');
 Route::delete('/unlike/{post_id}', [LikeController::class, 'unlike'])
+    ->middleware('auth:sanctum');
+
+
+Route::put('/bookmark/{post_id}', [BookmarkController::class, 'book'])
+    ->middleware('auth:sanctum');
+Route::delete('/bookmark/{post_id}', [BookmarkController::class, 'unbook'])
+    ->middleware('auth:sanctum');
+Route::get('/bookmarks', [BookmarkController::class, 'getUserBookmarks'])
     ->middleware('auth:sanctum');
 
 Route::put('/follow/{followed_id}', [FollowController::class, 'follow'])

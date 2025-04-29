@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    public function getUserProfile(Request $request, string $user_id)
+    public function getUserProfile(Request $request, string $user_id = null)
     {
         if (!$user_id) {
             $user_id = $request->user()->id;

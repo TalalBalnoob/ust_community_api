@@ -18,8 +18,9 @@ class LikePostNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => $this->username . " Liked your post",
-            'ar_message' => $this->username . " اعجب بنشورك ",
+            'type' => 'like',
+            'username' => $this->username,
+            'user_id' => $notifiable->id,
             'post_id' => $this->post_id
         ];
     }
