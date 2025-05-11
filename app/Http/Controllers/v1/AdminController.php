@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Major;
+use App\Models\Role;
 use App\Models\Staff;
 use App\Models\Student;
 use App\Models\User;
@@ -62,26 +64,56 @@ class AdminController extends Controller
 
         $validateReq = $request->validate(
             [
-                'username' => ['string', 'min:5', 'max:12', 'optional'],
-                'password' => [Password::min(8), 'optional'],
-                'isAdmin' => ['boolean', 'optional'],
-                'user_type_id' => ['between:1,2', 'optional'],
+                'username' => ['string', 'min:5', 'max:12'],
+                'password' => [Password::min(8)],
+                'isAdmin' => ['boolean'],
+                'user_type_id' => ['between:1,2'],
+                'brnash' => ['string'],
+                'role' => ['string'],
+                'major' => ['string'],
+                'level' => ['string'],
             ]
         );
 
-        if ($validateReq['username'] ?? false) {
+        if (array_key_exists('username', $validateReq)) {
             $user->username = $validateReq['username'];
         }
-        if ($validateReq['password'] ?? false) {
+        if (array_key_exists('password', $validateReq)) {
             $user->password = $validateReq['password'];
         }
-        if ($validateReq['isAdmin'] ?? false) {
+        if (array_key_exists('isAdmin', $validateReq)) {
             $user->isAdmin = $validateReq['isAdmin'];
         }
         // FIXME: need to make new profile and delete the old profile before change type of profile
-        if ($validateReq['user_type_id'] ?? false) {
+        if (array_key_exists('user_type_id', $validateReq)) {
             $user->user_type_id = $validateReq['user_type_id'];
         }
+
+        if (array_key_exists('branch', $validateReq)) {
+            $user->branch = $validateReq['branch'];
+        }
+
+
+        if ($user->user_type_id == 1) {
+            $profile = $user->profile();
+            if (array_key_exists('major', $validateReq)) {
+                $profile->major_id =  Major::query()->where('major', $validateReq['major'])->first('id')->id;
+            }
+
+            if (array_key_exists('level', $validateReq)) {
+                $profile->level = $validateReq['level'];
+            }
+            $profile->save();
+        }
+
+        if ($user->user_type_id == 2) {
+            $profile = $user->profile();
+            if (array_key_exists('role', $validateReq)) {
+                $profile->role_id =  Role::query()->where('role', $validateReq['role'])->first('id');
+            }
+            $profile->save();
+        }
+
 
         $user->save();
 
