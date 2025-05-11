@@ -20,7 +20,7 @@ class NewFollowNotification extends Notification
         return [
             'type' => 'follow',
             'username' => $this->username,
-            'user_id' => $notifiable->id,
+            'user_id' => $notifiable->id . '',
         ];
     }
 

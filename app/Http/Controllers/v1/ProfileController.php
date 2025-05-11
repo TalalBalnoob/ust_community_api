@@ -30,6 +30,14 @@ class ProfileController extends Controller
 
         $user['following'] = Follower::query()->where('follower_id', $user['id'])->get()->count();
         $user['followers'] = Follower::query()->where('followed_id', $user['id'])->get()->count();
+        if ($request->user()->id === $user['id']) {
+            $user['isFollowed'] = false;
+        } else {
+            $user['isFollowed'] = Follower::query()
+                ->where('follower_id', $request->user()->id)
+                ->where('followed_id', $user['id'])
+                ->exists();
+        }
         $user['profile'] = User::addUserProfileInfo($user['id']);
         $user['posts'] = Post::query()->where('user_id', $user['id'])->get();
         if ($user->user_type_id === 1) {

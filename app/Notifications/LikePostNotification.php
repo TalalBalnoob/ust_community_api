@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class LikePostNotification extends Notification
 {
-    public function __construct(public string $username, public string $post_id) {}
+    public function __construct(public string $username, public string $user_id, public string $post_id) {}
 
     public function via($notifiable)
     {
@@ -20,7 +20,7 @@ class LikePostNotification extends Notification
         return [
             'type' => 'like',
             'username' => $this->username,
-            'user_id' => $notifiable->id,
+            'user_id' => $notifiable->id . '',
             'post_id' => $this->post_id
         ];
     }

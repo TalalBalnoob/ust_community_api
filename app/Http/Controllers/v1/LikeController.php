@@ -30,7 +30,7 @@ class LikeController extends Controller
 
         $post_ownerID = $isPostExist->user()->get()->first()['id'];
         $post_owner = User::query()->get()->where('id', $post_ownerID)->first();
-        $post_owner->notify(new LikePostNotification($request->user()->profile()->displayName, $post_id));
+        $post_owner->notify(new LikePostNotification($request->user()->profile()->displayName, $request->user()['id'], $post_id));
 
         return response()->json(['message' => 'Post has been liked']);
     }

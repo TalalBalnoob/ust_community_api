@@ -9,6 +9,7 @@ use App\Http\Controllers\v1\FollowController;
 use App\Http\Controllers\v1\LikeController;
 use App\Http\Controllers\v1\PostController;
 use App\Http\Controllers\v1\ProfileController;
+use App\Http\Controllers\v1\ReportController;
 use App\Http\Controllers\v1\SearchController;
 use App\Http\Middleware\IsAdminUser;
 use App\Models\Bookmark;
@@ -83,5 +84,10 @@ Route::group(
 
         Route::post('register/student', [AuthController::class, 'register_student']);
         Route::post('register/staff', [AuthController::class, 'register_staff']);
+
+        Route::get('reports', [ReportController::class, 'index']);
+        Route::get('reports/{report_id}', [ReportController::class, 'show']);
+        Route::put('reports/{report_id}', [ReportController::class, 'review']);
+        Route::put('reports/{report_id}/action', [ReportController::class, 'takeAction']);
     }
 );

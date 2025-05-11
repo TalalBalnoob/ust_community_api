@@ -20,7 +20,7 @@ class CommentNotification extends Notification
         return [
             'type' => 'comment',
             'username' => $this->username,
-            'user_id' => $notifiable->id,
+            'user_id' => $notifiable->id . '',
             'post_id' => $this->post_id
         ];
     }

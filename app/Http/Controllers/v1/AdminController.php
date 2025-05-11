@@ -13,7 +13,14 @@ class AdminController extends Controller
 {
     public function getUserList(Request $request)
     {
-        return Response()->json(User::query()->get()->all());
+        $userList = User::query()->get()->all();
+
+        foreach ($userList as $user) {
+            $userProfail = User::addUserProfileInfo($user->id);
+            $user['display_name'] = $userProfail['profile'];
+        }
+
+        return Response()->json($userList);
     }
 
     public function searchUsers(Request $request)
@@ -55,24 +62,24 @@ class AdminController extends Controller
 
         $validateReq = $request->validate(
             [
-                'username' => ['string', 'min:5', 'max:12'],
-                'password' => [Password::min(8)],
-                'isAdmin' => ['boolean'],
-                'user_type_id' => ['between:1,2']
+                'username' => ['string', 'min:5', 'max:12', 'optional'],
+                'password' => [Password::min(8), 'optional'],
+                'isAdmin' => ['boolean', 'optional'],
+                'user_type_id' => ['between:1,2', 'optional'],
             ]
         );
 
-        if ($validateReq['username']) {
+        if ($validateReq['username'] ?? false) {
             $user->username = $validateReq['username'];
         }
-        if ($validateReq['password']) {
+        if ($validateReq['password'] ?? false) {
             $user->password = $validateReq['password'];
         }
-        if ($validateReq['isAdmin']) {
+        if ($validateReq['isAdmin'] ?? false) {
             $user->isAdmin = $validateReq['isAdmin'];
         }
         // FIXME: need to make new profile and delete the old profile before change type of profile
-        if ($validateReq['user_type_id']) {
+        if ($validateReq['user_type_id'] ?? false) {
             $user->user_type_id = $validateReq['user_type_id'];
         }
 
