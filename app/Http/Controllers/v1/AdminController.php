@@ -33,7 +33,7 @@ class AdminController extends Controller
             ->where('displayName', 'LIKE', "%{$searchText}%")
             ->get();
 
-        $users->merge(
+        $users = $users->merge(
             Staff::query()
                 ->where('displayName', 'LIKE', "%{$searchText}%")
                 ->get()

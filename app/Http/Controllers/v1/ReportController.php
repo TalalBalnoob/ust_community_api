@@ -8,6 +8,23 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    public function report_post(Request $request, string $post_id)
+    {
+        $request->validate([
+            'body' => 'required|string|max:255',
+        ]);
+
+        $report = new Report();
+        $report->post_id = $request['post_id'];
+        $report->report_text = $request['body'];
+        $report->user_id = $request->user()->id;
+        $report->isReviewed = false;
+
+        $report->save();
+
+        return Response()->json('Report has been submitted');
+    }
+
     public function index(Request $request)
     {
         $isReviewed = $request['isReviewed'];

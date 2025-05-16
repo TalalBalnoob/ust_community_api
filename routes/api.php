@@ -71,6 +71,9 @@ Route::get('/activity', [ActivityController::class, 'getAllUserActivitis'])->mid
 Route::get('/unreadActivity', [ActivityController::class, 'getUnreadUserActivitis'])->middleware('auth:sanctum');
 Route::post('/readActivity', [ActivityController::class, 'readActivity'])->middleware('auth:sanctum');
 
+Route::post('/report/{post_id}', [ReportController::class, 'report_post'])
+    ->middleware('auth:sanctum');
+
 // ############################# Admin Routes #############################
 Route::group(
     ['prefix' => 'admin', 'middleware' => ['auth:sanctum', IsAdminUser::class]],
