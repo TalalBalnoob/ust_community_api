@@ -19,7 +19,7 @@ class AdminController extends Controller
 
         foreach ($userList as $user) {
             $userProfail = User::addUserProfileInfo($user->id);
-            $user['display_name'] = $userProfail['profile'];
+            $user['display_name'] = $userProfail['displayName'];
         }
 
         return Response()->json($userList);
@@ -64,7 +64,6 @@ class AdminController extends Controller
 
         $validateReq = $request->validate(
             [
-                'username' => ['string', 'min:5', 'max:12'],
                 'password' => [Password::min(8)],
                 'isAdmin' => ['boolean'],
                 'user_type_id' => ['between:1,2'],

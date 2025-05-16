@@ -34,6 +34,11 @@ class ReportController extends Controller
 
     public function review(Request $request, string $report_id)
     {
+        $request->validate([
+            'isValid' => 'nullable|boolean',
+        ]);
+
+        $isValid = $request['isValid'];
         $report = Report::query()->find($report_id);
 
         if (!$report) {
@@ -44,14 +49,10 @@ class ReportController extends Controller
         }
 
         $report->isReviewed = true;
+        if ($isValid) $report->isValid = $isValid;
         $report->reviewer_id = $request->user()->id;
 
-        $report->update(
-            [
-                "isReviewed" => true,
-                "reviewer_id" => $request->user()->id
-            ]
-        );
+        $report->save();
 
         return Response()->json('report is reviewed now');
     }
