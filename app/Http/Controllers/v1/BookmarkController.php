@@ -18,9 +18,18 @@ class BookmarkController extends Controller
             return response()->json(['message' => 'user not found'], 404);
         }
 
-        $bookmarks = Bookmark::query()->where('user_id', $user['id'])->with('post')->get();
 
-        return response()->json($bookmarks);
+        $posts = Bookmark::where('user_id', $user['id'])
+            ->with('post')
+            ->get()
+            ->pluck('post'); // get only the posts
+
+
+        foreach ($posts as $post) {
+            $post->addRegularPostInfo($user['id']);
+        }
+
+        return response()->json($posts);
     }
 
     public function book(Request $request, string $post_id)

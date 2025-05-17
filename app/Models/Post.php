@@ -42,6 +42,7 @@ class Post extends Model
     public function addRegularPostInfo($user_id)
     {
         $this['isLiked'] = Like::query()->where('user_id', $user_id)->where('post_id', $this['id'])->get()->count() === 1 ? true : false;
+        $this['isBooked'] = Bookmark::query()->where('user_id', $user_id)->where('post_id', $this['id'])->get()->count() === 1 ? true : false;
         $this['likes'] = $this->likes()->get()->count();
 
         $this['profile'] = User::addUserProfileInfo($this['user_id']);

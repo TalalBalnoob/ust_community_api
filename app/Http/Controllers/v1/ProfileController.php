@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bookmark;
 use App\Models\Comment;
 use App\Models\Follower;
 use App\Models\Major;
@@ -48,6 +49,15 @@ class ProfileController extends Controller
         }
 
         foreach ($user['posts'] as $post) {
+            $post->addRegularPostInfo($user['id']);
+        }
+
+        $user['bookmarks'] = Bookmark::where('user_id', $user['id'])
+            ->with('post')
+            ->get()
+            ->pluck('post');
+
+        foreach ($user['bookmarks'] as $post) {
             $post->addRegularPostInfo($user['id']);
         }
 
